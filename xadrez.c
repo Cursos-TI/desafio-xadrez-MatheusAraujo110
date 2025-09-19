@@ -1,53 +1,85 @@
 #include <stdio.h>
 
-int main(void)
+void moverTorre(int passos)
 {
-    int passosTorre = 5;
-    int passosBispo = 5;
-    int passosRainha = 8;
+    if (passos <= 0)
+        return;             // Caso base
+    printf("Direita\n");    // Ação
+    moverTorre(passos - 1); // Chamada recursiva
+}
 
-    int passosCavaloVertical = 2;  // duas casas para baixo
-    int passosCavaloHorizontal = 1; // uma casa para a esquerda
+void moverBispo(int passosVerticais, int passosHorizontais)
+{
+    if (passosVerticais <= 0)
+        return; // Caso base da recursão
 
-    const char *DIREITA = "Direita\n";
-    const char *CIMA_DIREITA = "Cima Direita\n";
-    const char *ESQUERDA = "Esquerda\n";
-    const char *BAIXO = "Baixo\n";
-
-    for (int i = 0; i < passosTorre; i++)
+    // Loop interno: movimenta horizontalmente para cada movimento vertical
+    for (int h = 0; h < passosHorizontais; h++)
     {
-        printf("%s", DIREITA);
+        printf("Direita\n");
     }
 
-    int i = 0;
-    while (i < passosBispo)
+    printf("Cima\n"); // Movimento vertical
+
+    moverBispo(passosVerticais - 1, passosHorizontais); // Recursão
+}
+
+void moverRainha(int passos)
+{
+    if (passos <= 0)
+        return; // Caso base
+    printf("Esquerda\n");
+    moverRainha(passos - 1); // Chamada recursiva
+}
+
+void moverCavalo(int passosVerticais, int passosHorizontais)
+{
+    for (int v = 1; v <= passosVerticais; v++)
     {
-        printf("%s", CIMA_DIREITA);
-        i++;
-    }
+        printf("Cima\n");
 
-    int j = 0;
-    do
-    {
-        printf("%s", ESQUERDA);
-        j++;
-    } while (j < passosRainha);
-
-    printf("\n");
-
-    for (int v = 0; v < passosCavaloVertical; v++) // movimento vertical (2 casas)
-    {
-        printf("%s", BAIXO);
-
-        // Dentro do loop vertical, usamos while para controlar a parte horizontal
-        int h = 0;
-        while (h < passosCavaloHorizontal && v == passosCavaloVertical - 1)
+        for (int h = 1; h <= passosHorizontais; h++)
         {
-            // Só move horizontal depois de terminar o movimento vertical
-            printf("%s", ESQUERDA);
-            h++;
+            if (v < passosVerticais)
+            {
+                // Antes de completar o movimento vertical, pula horizontal
+                continue;
+            }
+            printf("Direita\n");
+            break; // Sai do loop após mover horizontal uma vez
         }
     }
+}
+
+int main(void)
+{
+    // Quantidade de passos definida no código
+    int passosTorre = 5;
+    int passosBispoVertical = 5;
+    int passosBispoHorizontal = 1;
+    int passosRainha = 8;
+    int passosCavaloVertical = 2;
+    int passosCavaloHorizontal = 1;
+
+    // Torre
+    printf("=== Movimentos da Torre ===\n");
+    moverTorre(passosTorre);
+    printf("\n");
+
+    // Bispo
+    printf("=== Movimentos do Bispo ===\n");
+    moverBispo(passosBispoVertical, passosBispoHorizontal);
+    printf("\n");
+
+    // Rainha
+    printf("=== Movimentos da Rainha ===\n");
+    moverRainha(passosRainha);
+    printf("\n");
+
+    // Cavalo
+    printf("=== Movimentos do Cavalo ===\n");
+    moverCavalo(passosCavaloVertical, passosCavaloHorizontal);
+    printf("\n");
 
     return 0;
 }
